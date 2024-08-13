@@ -18,6 +18,7 @@ window.onload = function () {
     recognition.interimResults = true; // Show partial results while speaking
 
     let isRecognitionActive = false;
+    let previousText = ''; // Store previous final text to manage repetitions
 
     startBtn.addEventListener("click", () => {
         if (!isRecognitionActive) {
@@ -49,8 +50,12 @@ window.onload = function () {
             }
         }
 
-        output.innerHTML += finalText + '<i>' + interimText + '</i>';
-        output.scrollTop = output.scrollHeight; // Auto-scroll to the bottom
+        // Only update if the final text has changed
+        if (finalText.trim() !== previousText.trim()) {
+            previousText = finalText.trim();
+            output.innerHTML += '<div>' + finalText + '</div><i>' + interimText + '</i>';
+            output.scrollTop = output.scrollHeight; // Auto-scroll to the bottom
+        }
     };
 
     recognition.onerror = function (event) {
