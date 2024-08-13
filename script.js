@@ -16,7 +16,6 @@ window.onload = function () {
     recognition.interimResults = true; // Show partial results while speaking
 
     let isRecognitionActive = false;
-    let lastResultTime = Date.now();
 
     startBtn.addEventListener("click", () => {
         if (!isRecognitionActive) {
@@ -40,17 +39,9 @@ window.onload = function () {
 
         for (let i = event.resultIndex; i < event.results.length; i++) {
             const transcript = event.results[i][0].transcript;
-            const currentTime = Date.now();
-            const timeDifference = currentTime - lastResultTime;
 
             if (event.results[i].isFinal) {
-                // Add a new line if there was a 3-second pause
-                if (timeDifference > 3000) {
-                    finalText += '<br>' + transcript;
-                } else {
-                    finalText += transcript + ' ';
-                }
-                lastResultTime = currentTime;
+                finalText += transcript + ' ';
             } else {
                 interimText += transcript;
             }
@@ -62,20 +53,11 @@ window.onload = function () {
 
     recognition.onerror = function (event) {
         console.error("Speech recognition error detected: " + event.error);
-
-        // If recognition fails due to another process, try restarting
-        if (event.error === 'network' || event.error === 'audio-capture') {
-            recognition.stop();
-            isRecognitionActive = false;
-            alert("Error with audio capture. Please check your microphone settings or other audio processes.");
-        }
     };
 
     recognition.onend = function () {
         if (isRecognitionActive) {
-            // Restart recognition if manually stopped
-            recognition.start();
-            console.log("Speech recognition restarted.");
+            recognition.start(); // Restart recognition to keep it running
         }
     };
 };
