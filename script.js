@@ -3,13 +3,15 @@ window.onload = function () {
     const stopBtn = document.getElementById("stop-btn");
     const output = document.getElementById("output");
 
+    // Check if the browser supports the Web Speech API
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
-        alert("Sorry, your browser does not support the Web Speech API. Please try using Google Chrome.");
+        alert("Sorry, your browser does not support the Web Speech API. Please use Google Chrome.");
         return;
     }
 
+    // Create a new instance of SpeechRecognition
     const recognition = new SpeechRecognition();
     recognition.lang = 'en-US'; // Transcribe everything to English
     recognition.continuous = true; // Keep recording continuously
